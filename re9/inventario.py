@@ -56,5 +56,8 @@ class Inventario():
     def barra_proteina():
         Luta.especial(Luta)
 
+    def fita_de_tinta():
+        pass   
+
 
 

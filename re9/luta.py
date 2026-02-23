@@ -49,7 +49,7 @@ SELECT * FROM tabelaHerois WHERE id = ?
         print(self.personagem_escolhido, '\n')  
         conn.commit()
         conn.close()
-        self.personagem_escolhido.inventario.extend(['Erva verde','Erva amarela','Spray','Estamina','Barra de proteína','Granada de mão' ,'Granada de luz','Carregador estendido'])
+        self.personagem_escolhido.inventario.extend(['Erva verde','Erva amarela','Spray','Estamina','Barra de proteína','Granada de mão' ,'Granada de luz','Carregador estendido','Fita de tinta'])
             
     def escolher_inimigo(self):
         i = self.inimigo_escolhido
@@ -137,22 +137,19 @@ SELECT * FROM tabelaHerois WHERE id = ?
     def dano_critico(self):
         dano_critico = 0
         dano_critico = round((self.personagem_escolhido.dano + self.personagem_escolhido.dano * 1.5),1)
-        if self.inimigo_escolhido.vida < 0:
-            self.inimigo_escolhido.vida = 0
-        self.inimigo_escolhido.vida = (self.inimigo_escolhido.vida - dano_critico)
+        nova_vida = (self.inimigo_escolhido.vida - dano_critico)
+        self.inimigo_escolhido.vida = max(0,nova_vida)
         mensagemm = Comentarios.mensagem_dano_critico(self,self.personagem_escolhido.dano, self.inimigo_escolhido.nome )    
         Luta.log_batalha(self)
 
-    def ataque_normal(self,modificador_dano):               
-        self.inimigo_escolhido.vida = (self.inimigo_escolhido.vida - (self.personagem_escolhido.dano * modificador_dano))
-        if self.inimigo_escolhido.vida < 0:
-            self.inimigo_escolhido.vida = 0
+    def ataque_normal(self,modificador_dano):
+        nova_vida = (self.inimigo_escolhido.vida - (self.personagem_escolhido.dano * modificador_dano))               
+        self.inimigo_escolhido.vida = max(0,nova_vida)
         Luta.log_batalha(self)
 
     def ataque_inimigo(self):
-        self.personagem_escolhido.vida = (self.personagem_escolhido.vida - self.inimigo_escolhido.dano)
-        if self.personagem_escolhido.vida < 0:
-            self.personagem_escolhido.vida = 0
+        nova_vida = (self.personagem_escolhido.vida - self.inimigo_escolhido.dano)
+        self.personagem_escolhido.vida = max(0,nova_vida)
         mensagem = 1 
         Luta.log_batalha(self)
 
@@ -263,9 +260,14 @@ Seu inventario:
     def save(self):
         h = self.personagem_escolhido
 
-        data_agora = datetime.now()
-        s.salvar_progresso(self, h.__dict__,h.inventario, data_agora)
-        print('Salvo com Sucesso')
+        if h.inventario.count('Fita de tinta'):
+            print(f'Fitas de tinta: {h.inventario.count('Fita de tinta') - 1}')
+            data_agora = datetime.now()
+            s.salvar_progresso(self, h.__dict__,h.inventario, data_agora)
+            print('Salvo com Sucesso')
+        else:
+            print(f'Fitas de tinta: {h.inventario.count('Fita de tinta')}')
+            print('Você não possui nenhuma fita para salvar')
     
     def carregar_save(self):
         h = self.personagem_escolhido
@@ -276,10 +278,10 @@ SELECT id_saves, nome, data FROM  tabelaSaves;
 """)
         save = cursor.fetchall()
         for i in save:
-            id = i[0]
+            id_personagem = i[0]
             nome = i[1]
             data = i[2]
-            print(f'SAVE: {id} | PERSONAGEM: {nome} | DATA: {data}')
+            print(f'SAVE: {id_personagem} | PERSONAGEM: {nome} | DATA: {data}')
         escolha = input('Escolha teu save')
         conn.commit()
 
@@ -301,17 +303,17 @@ WHERE id_saves = {escolha};
             aaa = Herois(nome,equipamento, dano,vida,vida_maxima,especial,nivel,xp)
             h.__dict__.update(aaa.__dict__)
             print(h, '\n')  
-            print(f' {id} | {nome} | {equipamento} | {dano} | {vida} | {vida_maxima} | {especial} | {nivel} | {xp}' )
+            print(f' {id_personagem} | {nome} | {equipamento} | {dano} | {vida} | {vida_maxima} | {especial} | {nivel} | {xp}' )
             conn.commit()
             
         cursor.execute(f"""
-SELECT nomeItem 
-FROM tabelaInventario;
+SELECT nomeItem,quantidade 
+FROM tabelaInventario WHERE saves = {id_personagem};
 """)    
 
         inventario = cursor.fetchall()
         for i in inventario:
-            h.inventario.append(i[0])
+            h.inventario.extend([i[0]] * (i[1]))
         conn.commit()
         conn.close()    
             
@@ -320,13 +322,6 @@ FROM tabelaInventario;
         try:
             luta = Luta()
 
-
-            #s.criar_tabela_herois():
-
-            #s.criar_tabela_inventario()
-            #s.criar_tabela_saves()
-            
-            
             save = int(input('''
     ┌──────────────┐   ┌───────────────┐
     │ [1] NEW GAME │   │ [2] CONTINUE  │
@@ -342,9 +337,9 @@ FROM tabelaInventario;
             
             while True:
                 opcoes = int(input('''
-    ┌────────────┐   ┌──────────┐    ┌────────────┐     
-    │ [1] ATACAR │   │ [2] ITEM │    │ [3] SALVAR │    
-    └────────────┘   └──────────┘    └────────────┘    
+    ┌────────────┐   ┌──────────┐    
+    │ [1] ATACAR │   │ [2] ITEM │   
+    └────────────┘   └──────────┘    
     '''))
                 if opcoes == 1:
                     os.system('cls')
@@ -372,15 +367,24 @@ ____________________________________________________
                     Herois.ganhar_experiencia(self.personagem_escolhido,self.inimigo_escolhido.nivel,self.inimigo_escolhido.tipo)
                     Herois.subir_level(self.personagem_escolhido)
                     Herois.exibir_status(self.personagem_escolhido)
+
+                    opcoes_save = int(input('''
+    ┌───────────────┐   ┌────────────┐    
+    │ [1] CONTINUAR │   │ [2] SALVAR │   
+    └───────────────┘   └────────────┘    
+    '''))
+                    if opcoes_save == 1:
+                        pass
+                    elif opcoes_save == 2:
+                        Luta.save(self)
+                        pass
+                    
                     Luta.escolher_inimigo(Luta)           
                 if self.personagem_escolhido.vida <= 0:
                     Herois.tela_de_morte(self.personagem_escolhido,contador_kills)          
                     Luta.escolher_personagem(Luta)
                 elif opcoes == 2:
-                    
-                    Luta.usar_consumivel(Luta)
-                elif opcoes == 3:
-                    luta.save()  
+                    Luta.usar_consumivel(Luta)  
         except Exception as e: print(f'Esse é o Erro: {e}')
 
 

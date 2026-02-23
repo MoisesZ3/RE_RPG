@@ -40,7 +40,6 @@ class Herois(Personagem):
     |❇️ Experiência {self.experiencia}/{XP_necessario}
     |___________________________________
     ''')    
-            input('Precione a tecla "[Enter] ⏎" para continuar...\n')
             time.sleep(0.5)
 
     def contador_kills(tipo_inimigo):
@@ -55,9 +54,9 @@ class Herois(Personagem):
             pass
         else:    
             if tipo_inimigo == 'boss':
-                XP_ganho = (nivel_animigo * 100)
+                XP_ganho = (nivel_animigo * 200)
             elif tipo_inimigo == 'normal':
-                XP_ganho = (nivel_animigo * 200) 
+                XP_ganho = (nivel_animigo * 100) 
         
             self.experiencia += XP_ganho
             print(f'{Cores.VERMELHO}Você recebeu {XP_ganho} de experiencia{Cores.RESET}')
