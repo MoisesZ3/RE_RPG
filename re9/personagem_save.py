@@ -114,14 +114,16 @@ class Save():
             conn.commit()
             id_personagem = cursor.fetchone()[0]
 
-            for item in inventario:
+            inventario_sem_repetidas = list(dict.fromkeys(inventario))
+        
+            for item in inventario_sem_repetidas:
                 cursor.execute(f"""
         INSERT INTO tabelaInventario(
             nomeItem,
             quantidade,
             saves)
         VALUES(?,?,?);
-         """,(item,1,id_personagem))
+         """,(item,inventario.count(item),id_personagem))
                 conn.commit()
 
             conn.close()
