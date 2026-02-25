@@ -210,13 +210,25 @@ SELECT * FROM tabelaHerois WHERE id = ?
 
     def usar_consumivel(self):
         from inventario import Inventario 
-        h = self.personagem_escolhido  
+        h = self.personagem_escolhido 
+
+        itens = ['Erva verde','Erva amarela','Spray','Estamina','Barra de proteína','Granada de mão','Granada de luz','Fita de tinta'] 
+
+        desc_erva_verde = ['Essa erva verde cura','minha vida quando eu','uso ela no combate'] 
+        desc_erva_amarela = ['Essa erva amarela cura','minha vida e aumenta','meu limite de vida.']
+        desc_spray = ['Esse spray cura minha','vida quando eu uso ele','só que melhor que','melhor que a erva verde']
+        desc_estamina = ['Essa estamina me da','mais energia para desferir','ataques mais fortes.']
+        desc_barra_proteina = ['Essa barra de proteína','ativa meu golpe especial','quando eu uso ela.']
+        desc_granada_mao = ['Essa granada de mão','causa dano no inimigo','quando eu lanço ela.']
+        desc_granada_luz = ['Essa granada de luz','atordoa o inimigo e','me permite agir.']
+        desc_carregador = ['Esse carregador deixa','minha arma com mais munições','posso ter mais acertos.']
+        desc_fita_tinta = ['Essa fita de tinta','parece ser de uma','maquina de escrita antiga.']
+
         index = 0
         os.system('cls')
 
 
         while True:
-            itens = h.inventario
             print('''
 ================================================================
  [ INVENTÁRIO DE CAMPO ]             ❤️ HP [████████░░] 76%
