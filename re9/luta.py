@@ -214,37 +214,43 @@ SELECT * FROM tabelaHerois WHERE id = ?
 
         itens = ['Erva verde','Erva amarela','Spray','Estamina','Barra de proteína','Granada de mão','Granada de luz','Fita de tinta'] 
 
-        desc_erva_verde = ['Essa erva verde cura','minha vida quando eu','uso ela no combate'] 
-        desc_erva_amarela = ['Essa erva amarela cura','minha vida e aumenta','meu limite de vida.']
-        desc_spray = ['Esse spray cura minha','vida quando eu uso ele','só que melhor que','melhor que a erva verde']
-        desc_estamina = ['Essa estamina me da','mais energia para desferir','ataques mais fortes.']
-        desc_barra_proteina = ['Essa barra de proteína','ativa meu golpe especial','quando eu uso ela.']
-        desc_granada_mao = ['Essa granada de mão','causa dano no inimigo','quando eu lanço ela.']
-        desc_granada_luz = ['Essa granada de luz','atordoa o inimigo e','me permite agir.']
-        desc_carregador = ['Esse carregador deixa','minha arma com mais munições','posso ter mais acertos.']
-        desc_fita_tinta = ['Essa fita de tinta','parece ser de uma','maquina de escrita antiga.']
+        desc_erva_verde = ['','Essa erva verde cura','minha vida quando eu','uso ela no combate','','RECUPERA 30 DE VIDA'] 
+        desc_erva_amarela = ['','Essa erva amarela cura','minha vida e aumenta','meu limite de vida.','','RECUPERA 30 DE VIDA','E PODE AUMENTAR A MAXIMA']
+        desc_spray = ['','Esse spray cura minha','vida quando eu uso ele,','só que melhor','que a erva verde','','RECUPERA 60 DE VIDA']
+        desc_estamina = ['','Essa estamina me da','mais energia para desferir','ataques mais fortes.','','ATIVA O ATAQUE CRITICO']
+        desc_barra_proteina = ['','Essa barra de proteína','ativa meu golpe especial','quando eu uso ela.','','ATIVA O ESPECIAL']
+        desc_granada_mao = ['','Essa granada de mão','causa dano no inimigo','quando eu lanço ela.','','TIRA 70 DE VIDA DO INIMIGO']
+        desc_granada_luz = ['','Essa granada de luz','atordoa o inimigo e','me permite agir.','','PERMITE ATACAR','DUAS VEZES OU FUGIR']
+        desc_carregador = ['','Esse carregador deixa','minha arma com mais munições,','posso ter mais acertos.','','DISPARA UM ATAQUE','50% MAIS FORTE']
+        desc_fita_tinta = ['','Essa fita de tinta','parece ser de uma','maquina de escrita antiga.','','USADO PARA SALVAR','SEU PROGRESSO']
+
+        descricoes = [desc_erva_verde,desc_erva_amarela,desc_spray,desc_estamina,desc_barra_proteina,desc_granada_mao,desc_granada_luz,desc_carregador,desc_fita_tinta]
 
         index = 0
         os.system('cls')
 
-
         while True:
+            desc_selecionada = descricoes[index]
             print('''
 ================================================================
  [ INVENTÁRIO DE CAMPO ]             ❤️ HP [████████░░] 76%
-================================================================
-''')
-        
+================================================================              
+                          ║''')                                           
             for i, item in enumerate(itens):
-                    if i == index:
-                     print(f"  {Cores.AZUL}▶ {item.ljust(20)} {Cores.RESET}        ") 
-                    else:
-                     print(f"  {item.ljust(24)}        ")
-            print('''
+                if i == index:
+                    coluna_item = f"  {Cores.AZUL}▶ {item.ljust(20)} {Cores.RESET}"
+                else:
+                    coluna_item = f"  {item.ljust(23)}"
+
+                if i < len(desc_selecionada):
+                    coluna_desc = f"{Cores.AZUL}{desc_selecionada[i]}{Cores.RESET}"
+                else:
+                    coluna_desc = ""
+                print(f"{coluna_item} ║       {coluna_desc}") 
+            print('''                          ║
 ================================================================
   [W/S] Navegar  |  [ENTER] Usar  |  [X] Combinar  |  [Q] Sair
 ================================================================
-
 ''')
             tecla = msvcrt.getch().lower()
 
