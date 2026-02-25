@@ -1,13 +1,12 @@
 import time
-
+import random
 from cores import Cores
 from personagem import Personagem
 
 class Herois(Personagem):
     
     def __init__(self, nome, equipamento, dano,vida,vida_maxima,especial,nivel,experiencia):
-        super().__init__(nome,equipamento,dano,vida,nivel)
-        self.vida_maxima = int(vida_maxima)
+        super().__init__(nome,equipamento,dano,vida, vida_maxima, nivel)
         self.especial = especial
         self.experiencia = experiencia
         self.inventario = []
@@ -26,7 +25,7 @@ class Herois(Personagem):
 
 
     def exibir_status(self):
-        XP_necessario = 1000 + (self.nivel * 500)
+        XP_necessario = 1000 + (self.nivel * 200)
         if self.nivel == 10:
             pass
         else:    
@@ -63,17 +62,18 @@ class Herois(Personagem):
             time.sleep(0.5)
 
     def subir_level(self):
-        XP_necessario = (1000 + (self.nivel * 500))
         if self.nivel == 10:
             print('Você já alcaçou o nivel maximo(10)')
-        elif self.experiencia >= XP_necessario:   
-            self.nivel += 1
-            self.dano = self.dano * 1.3
-            self.vida_maxima = int(self.vida_maxima * 1.5)
-            self.vida = self.vida_maxima
-            self.experiencia = (self.experiencia - XP_necessario)
-            print(f'{'\033[92m'}Parabéns! {self.nome} subiu para o nível {self.nivel}!{'\033[0m'}')
-            time.sleep(0.5)
+        else:    
+            XP_necessario = 1000 + (self.nivel * 500)
+            if self.experiencia >= XP_necessario:
+                self.nivel += 1
+                self.dano = self.dano * 1.3
+                #self.vida_maxima = self.vida_maxima * 1.5
+                self.vida == self.vida_maxima
+                self.experiencia -= XP_necessario
+                print(f'{'\033[92m'}Parabéns! {self.nome} subiu para o nível {self.nivel}!{'\033[0m'}')
+                time.sleep(0.5)
 
     def tela_de_morte(self,contador_kills): 
         kill_monstro = 0
@@ -95,3 +95,32 @@ class Herois(Personagem):
 
     def nivel_heroi (self):
         return self.nivel
+    
+
+
+    def especial_ethan(self):
+        self.vida = (self.vida + int(15))
+        print(f'{Cores.AZUL}Você regenerou 15 de vida\n{Cores.RESET}')
+    def especial_leon(self):
+        self.vida = (self.vida + self.dano)
+        print(f'{Cores.AZUL}Leon deu um  mortal e desviou do ataque\n{Cores.RESET}')
+    def especial_chris(self):
+        pass
+    def especial_ada(self):
+        self.dano = (self.dano + self.dano)
+        print(f'{Cores.AZUL}Dano multiplicado\n{Cores.RESET}')
+    def especial_hunk(self):      
+        hitkill = random.randint(1,5)
+        probabildade = random.randint(1,5)
+        if hitkill == probabildade:
+            print(f'{Cores.AZUL}PESCOÇO DO INIMIGO QUEBRADO\n{Cores.RESET}')
+    def especial_jill(self):
+        vida = self.vida/15
+        self.dano = (self.dano - vida)        
+    def especial_wesker(self, vida_inimigo):
+                vida_inimigo = (vida_inimigo - 70)
+                print(f'{Cores.AZUL} Ataque vertical {Cores.RESET}')
+                time.sleep(0.5)
+                print(f'{Cores.AZUL} Ataque horizontal {Cores.RESET}')
+                time.sleep(0.5)
+                print(f'{Cores.AZUL} Ataque transversal {Cores.RESET}')    
