@@ -9,6 +9,8 @@ from herois import Herois
 from cores import Cores
 from personagem_save import Save as s
 import msvcrt
+import winsound
+
 class Luta():
     def voltar_menu():
         print('Opção inválida')
@@ -75,7 +77,7 @@ SELECT * FROM tabelaHerois WHERE id = ?
         equipamento_inimigo = random.randint(0,4)
         nome = ['Ganado','Javo','Cultista','Chrysalid','Walker']
         nome_inimigo = random.randint(0,4)
-        vida = [35, 40, 50, 60, 65]
+        vida = [120, 40, 50, 60, 65]
         vida_inimigo = random.randint(0,4)
         dano = [15, 17, 20, 25, 30]
         dano_inimigo = random.randint(0,4)
@@ -229,6 +231,7 @@ SELECT * FROM tabelaHerois WHERE id = ?
         index = 0
         os.system('cls')
 
+        winsound.PlaySound(r'sons\abrir_maleta.wav', winsound.SND_FILENAME | winsound.SND_ASYNC)
         while True:
             desc_selecionada = descricoes[index]
             print('''
@@ -256,15 +259,20 @@ SELECT * FROM tabelaHerois WHERE id = ?
 
   
             if tecla == b'w':
+                winsound.PlaySound(r'sons\escolher.wav', winsound.SND_FILENAME | winsound.SND_ASYNC)
                 index = (index - 1) % len(itens)
                 os.system('cls')
             elif tecla == b's':
+                winsound.PlaySound(r'sons\escolher.wav', winsound.SND_FILENAME | winsound.SND_ASYNC)
                 index = (index + 1) % len(itens)
                 os.system('cls')
             elif tecla == b'\r':
+                winsound.PlaySound(r'sons\selecionar_item.wav', winsound.SND_FILENAME | winsound.SND_ASYNC)
                 print(f"\n Selecionado: {itens[index]} ")
                 itens.remove(itens[index])
+                os.system('cls')
                 break
+            
         
         try:
               
