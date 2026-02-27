@@ -256,16 +256,17 @@ SELECT * FROM tabelaHerois WHERE id = ?
                            ║''')                                           
             for i, item in enumerate(itens):
                 quantidade_itens = f'{h.inventario.count(item)}'
+                item_menu = f'{item} ({quantidade_itens})'
                 if i == index:
-                    coluna_item = f"  {Cores.AZUL}▶ {item.ljust(1,' ')}{quantidade_itens}{Cores.RESET}║"
+                    coluna_item = f" {Cores.AZUL}▶ {item_menu.ljust(24)}{Cores.RESET}"
                 else:
-                    coluna_item = f"  {item.ljust(25)}║"
+                    coluna_item = f" {item.ljust(26)}"
 
                 if i < len(desc_selecionada):
                     coluna_desc = f"{Cores.AZUL}{desc_selecionada[i]}{Cores.RESET}"
                 else:
                     coluna_desc = ""
-                print(f"{coluna_item.ljust(25)}{coluna_desc}") 
+                print(f"{coluna_item}║       {coluna_desc}") 
             print('''                           ║
 ================================================================
   [W/S] Navegar  |  [ENTER] Usar  |  [X] Combinar  |  [Q] Sair
