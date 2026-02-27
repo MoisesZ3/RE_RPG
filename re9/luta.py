@@ -39,12 +39,15 @@ class Luta():
 
   
             if tecla == b'w':
+                winsound.PlaySound(r'sons\escolher.wav', winsound.SND_FILENAME | winsound.SND_ASYNC)
                 index = (index - 1) % len(itens)
                 os.system('cls')
             elif tecla == b's':
+                winsound.PlaySound(r'sons\escolher.wav', winsound.SND_FILENAME | winsound.SND_ASYNC)
                 index = (index + 1) % len(itens)
                 os.system('cls')
             elif tecla == b'\r':
+                winsound.PlaySound(r'sons\selecionar_item.wav', winsound.SND_FILENAME | winsound.SND_ASYNC)
                 os.system('cls')
                 print(f"\n Selecionado: {itens[index]} \n".center(60, "-"))
                 index+=1
@@ -229,7 +232,7 @@ SELECT * FROM tabelaHerois WHERE id = ?
         i = self.inimigo_escolhido
       
         #try:
-        itens = ['Erva verde','Erva amarela','Spray','Estamina','Barra de proteína','Granada de mão','Granada de luz','Carregador Estendido','Fita de tinta'] 
+        itens = ['Erva verde','Erva amarela','Spray','Estamina','Barra de proteína','Granada de mão','Granada de luz','Carregador estendido','Fita de tinta'] 
 
         desc_erva_verde = ['','Essa erva verde cura','minha vida quando eu','uso ela no combate','','RECUPERA 30 DE VIDA'] 
         desc_erva_amarela = ['','Essa erva amarela cura','minha vida e aumenta','meu limite de vida.','','RECUPERA 30 DE VIDA','E PODE AUMENTAR A MAXIMA']
@@ -248,10 +251,12 @@ SELECT * FROM tabelaHerois WHERE id = ?
 
         winsound.PlaySound(r'sons\abrir_maleta.wav', winsound.SND_FILENAME | winsound.SND_ASYNC)
         while True:
+            barra_personagem = "█" * int(h.vida // 10) + "░" * int((h.vida_maxima - h.vida) // 10)
+            porcentagem_vida = int((h.vida / h.vida_maxima) * 100)
             desc_selecionada = descricoes[index]
-            print('''
+            print(f'''
 ================================================================
- [ INVENTÁRIO DE CAMPO ]             ❤️ HP [████████░░] 76%
+ [ INVENTÁRIO DE CAMPO ]             ❤️ HP [{barra_personagem}] {porcentagem_vida}%
 ================================================================              
                            ║''')                                           
             for i, item in enumerate(itens):
